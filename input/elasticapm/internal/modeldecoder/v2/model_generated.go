@@ -2613,7 +2613,7 @@ func (val *transactionRoot) processNestedSource() error {
 }
 
 func (val *transaction) IsSet() bool {
-	return val.Marks.IsSet() || val.Timestamp.IsSet() || val.OTel.IsSet() || (len(val.Links) > 0) || val.TraceID.IsSet() || val.ID.IsSet() || val.ParentID.IsSet() || val.Name.IsSet() || val.Type.IsSet() || val.Result.IsSet() || (len(val.DroppedSpanStats) > 0) || val.Outcome.IsSet() || val.FAAS.IsSet() || val.Session.IsSet() || val.Context.IsSet() || val.UserExperience.IsSet() || val.SpanCount.IsSet() || val.SampleRate.IsSet() || val.Duration.IsSet() || val.Sampled.IsSet()
+	return val.Marks.IsSet() || val.Timestamp.IsSet() || val.OTel.IsSet() || (len(val.Links) > 0) || val.TraceID.IsSet() || val.ID.IsSet() || val.ParentID.IsSet() || val.Name.IsSet() || val.Type.IsSet() || val.Result.IsSet() || (len(val.DroppedSpanStats) > 0) || val.Outcome.IsSet() || val.FAAS.IsSet() || val.Session.IsSet() || val.Context.IsSet() || val.UserExperience.IsSet() || val.SpanCount.IsSet() || val.SampleRate.IsSet() || val.Duration.IsSet() || val.Sampled.IsSet() || val.Synthetic.IsSet()
 }
 
 func (val *transaction) Reset() {
@@ -2643,6 +2643,7 @@ func (val *transaction) Reset() {
 	val.SampleRate.Reset()
 	val.Duration.Reset()
 	val.Sampled.Reset()
+	val.Synthetic.Reset()
 }
 
 func (val *transaction) validate() error {
@@ -2728,6 +2729,9 @@ func (val *transaction) validate() error {
 	if !val.Duration.IsSet() {
 		return fmt.Errorf("'duration' required")
 	}
+	if err := val.Synthetic.validate(); err != nil {
+		return errors.Wrapf(err, "synthetic")
+	}
 	return nil
 }
 
@@ -2752,6 +2756,9 @@ func (val *transaction) processNestedSource() error {
 	}
 	if err := val.SpanCount.processNestedSource(); err != nil {
 		return errors.Wrapf(err, "span_count")
+	}
+	if err := val.Synthetic.processNestedSource(); err != nil {
+		return errors.Wrapf(err, "synthetic")
 	}
 	return nil
 }
@@ -3024,6 +3031,51 @@ func (val *transactionSpanCount) validate() error {
 }
 
 func (val *transactionSpanCount) processNestedSource() error {
+	return nil
+}
+
+func (val *synthetic) IsSet() bool {
+	return val.Monitor.IsSet()
+}
+
+func (val *synthetic) Reset() {
+	val.Monitor.Reset()
+}
+
+func (val *synthetic) validate() error {
+	if !val.IsSet() {
+		return nil
+	}
+	if err := val.Monitor.validate(); err != nil {
+		return errors.Wrapf(err, "Monitor")
+	}
+	return nil
+}
+
+func (val *synthetic) processNestedSource() error {
+	if err := val.Monitor.processNestedSource(); err != nil {
+		return errors.Wrapf(err, "Monitor")
+	}
+	return nil
+}
+
+func (val *monitor) IsSet() bool {
+	return val.ID.IsSet() || val.Check_group.IsSet()
+}
+
+func (val *monitor) Reset() {
+	val.ID.Reset()
+	val.Check_group.Reset()
+}
+
+func (val *monitor) validate() error {
+	if !val.IsSet() {
+		return nil
+	}
+	return nil
+}
+
+func (val *monitor) processNestedSource() error {
 	return nil
 }
 

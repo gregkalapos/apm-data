@@ -114,6 +114,17 @@ type faas struct {
 	Coldstart nullable.Bool `json:"coldstart"`
 }
 
+type synthetic struct {
+	Monitor monitor `json:"Monitor"`
+}
+
+type monitor struct {
+	// if from synthetic
+	ID nullable.String `json:"id"`
+	// check group id from synthetic
+	Check_group nullable.String `json:"check_group"`
+}
+
 type trigger struct {
 	// The trigger type.
 	Type nullable.String `json:"type"`
@@ -958,6 +969,9 @@ type transaction struct {
 	// is captured. If a transaction is unsampled no spans and less context
 	// information will be reported.
 	Sampled nullable.Bool `json:"sampled"`
+
+	// Info about synthetic
+	Synthetic synthetic `json:"synthetic"`
 }
 
 type log struct {

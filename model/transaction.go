@@ -65,6 +65,17 @@ type Transaction struct {
 	//
 	// If Root is false, it will be omitted from the output event.
 	Root bool
+
+	Synthetic *Synthetic
+}
+
+type Synthetic struct {
+	Monitor *Monitor
+}
+
+type Monitor struct {
+	ID          string
+	Check_group string
 }
 
 type SpanCount struct {
@@ -86,6 +97,13 @@ func (e *Transaction) fields() map[string]any {
 	transaction.maybeSetMapStr("custom", customFields(e.Custom))
 	transaction.maybeSetMapStr("message", e.Message.Fields())
 	transaction.maybeSetMapStr("experience", e.UserExperience.Fields())
+	if e.Synthetic != nil && e.Synthetic.Monitor != nil {
+		synthetic := map[string]any{}
+		synthetic["monitor.id"] = e.Synthetic.Monitor.ID
+		synthetic["monitor.check_group"] = e.Synthetic.Monitor.Check_group
+
+		transaction.set("synthetic", synthetic)
+	}
 	if e.SpanCount.Dropped != nil || e.SpanCount.Started != nil {
 		spanCount := map[string]any{}
 		if e.SpanCount.Dropped != nil {

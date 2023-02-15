@@ -1103,6 +1103,37 @@
         "started"
       ]
     },
+    "synthetic": {
+      "description": "Info about synthetic",
+      "type": [
+        "null",
+        "object"
+      ],
+      "properties": {
+        "Monitor": {
+          "type": [
+            "null",
+            "object"
+          ],
+          "properties": {
+            "check_group": {
+              "description": "check group id from synthetic",
+              "type": [
+                "null",
+                "string"
+              ]
+            },
+            "id": {
+              "description": "if from synthetic",
+              "type": [
+                "null",
+                "string"
+              ]
+            }
+          }
+        }
+      }
+    },
     "timestamp": {
       "description": "Timestamp holds the recorded time of the event, UTC based and formatted as microseconds since Unix epoch",
       "type": [

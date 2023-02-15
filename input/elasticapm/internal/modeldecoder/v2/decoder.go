@@ -1327,6 +1327,14 @@ func mapToTransactionModel(from *transaction, event *model.APMEvent) {
 		}
 		mapSpanLinks(from.Links, &event.Span.Links)
 	}
+	if from.Synthetic.IsSet() {
+		out.Synthetic = &model.Synthetic{
+			Monitor: &model.Monitor{
+				Check_group: from.Synthetic.Monitor.Check_group.Val,
+				ID:          from.Synthetic.Monitor.ID.Val,
+			},
+		}
+	}
 }
 
 func mapToLogModel(from *log, event *model.APMEvent) {
